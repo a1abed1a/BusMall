@@ -34,10 +34,22 @@ img {
     margin-left: auto;
     margin-right: auto;
   }
-main section:nth-child(2){
-    margin: auto;
-    width: 50%;
-    padding: 10px;
-    font-size: 25px;
+#a{
+  margin: 10px;
+  border-radius: 10px;
+  display: flex;
+  padding-left: 50px;
+  }
+#char{
+  padding-left: 10px;
+  padding-top: 50px;
+  width: 1010px;
 }
-  
+ul{
+  width: 400px;
+}
+li{
+  list-style: square;
+  font-size: 25px;
+  padding: 3px;
+}
