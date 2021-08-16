@@ -7,6 +7,10 @@ let allimg = ['bag.jpg', 'banana.jpg', 'bathroom.jpg', 'boots.jpg', 'breakfast.j
 let maxAttempts = 25;
 let attempts = 0;
 let finishedimg = [];
+let nameArray = [];
+let votesArray = [];
+let viewsArray = [];
+
 function img(name){
   this.name = name.split('.')[0];
   this.jpg = `img/${name}`;
@@ -16,26 +20,34 @@ function img(name){
 }
 for (let i = 0; i < allimg.length; i++) {
   new img(allimg[i]);
+  nameArray[i] = finishedimg[i].name;
 }
-let Limg;
-let Cimg;
-let Rimg;
+let Limg = -1;
+let Cimg = -1;
+let Rimg = -1;
+let temLimg = -1;
+let temCimg = -1;
+let temRimg = -1;
 function randomjpg(){
-  Limg = Math.floor(Math.random()*allimg.length);
-  Cimg = Math.floor(Math.random()*allimg.length);
-  Rimg = Math.floor(Math.random()*allimg.length);
-  while (Cimg === Limg){
+  while (Limg === temLimg || Limg === temCimg || Limg === temRimg){
+    Limg = Math.floor(Math.random()*allimg.length);
+  }
+  while (Cimg === Limg || Cimg === temLimg || Cimg === temCimg || Cimg === temRimg){
     Cimg = Math.floor(Math.random()*allimg.length);
   }
-  while (Rimg === Limg || Rimg === Cimg){
+  while (Rimg === Limg || Rimg === Cimg || Rimg === temLimg || Rimg === temCimg || Rimg === temRimg){
     Rimg = Math.floor(Math.random()*allimg.length);
   }
   leftEl.setAttribute('src', finishedimg[Limg].jpg);
   finishedimg[Limg].views++;
+  temLimg = Limg;
   centerEl.setAttribute('src', finishedimg[Cimg].jpg);
   finishedimg[Cimg].views++;
+  temCimg = Cimg;
   rightEl.setAttribute('src', finishedimg[Rimg].jpg);
   finishedimg[Rimg].views++;
+  temRimg = Rimg;
+  console.log(`${temLimg},${temCimg},${temRimg}`);
 }
 randomjpg();
 leftEl.addEventListener('click', clicking);
@@ -77,4 +89,49 @@ function Results(){
     liEl.textContent = `${finishedimg[i].name} has ${finishedimg[i].votes} votes and  ${finishedimg[i].views} views.`;
   }
   buttEl.innerHTML = '';
+  chart();
 }
+function chart(){
+  for (let i = 0; i <finishedimg.length; i++){
+    votesArray[i] = finishedimg[i].votes;
+    viewsArray[i] = finishedimg[i].views;
+  }
+  let ctx = document.getElementById('myChart').getContext('2d');
+  let myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: nameArray,
+      datasets: [{
+        label: 'Votes',
+        data: votesArray,
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)'
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 1)'
+        ],
+        borderWidth: 1
+      },{
+        label: 'Views',
+        data: viewsArray,
+        backgroundColor: [
+          'rgba(75, 192, 192, 0.2)'
+        ],
+        borderColor: [
+          'rgba(75, 192, 192, 1)'
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+  document.getElementById('a').style.border = "black solid";
+  document.getElementById('Results').style.borderRight = "black solid";
+}
+
