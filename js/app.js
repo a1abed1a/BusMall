@@ -1,4 +1,5 @@
 let resultEl = document.getElementById('Results');
+let clearSEl = document.getElementById('clearS');
 let buttEl = document.getElementById('butt');
 let leftEl = document.getElementById('left');
 let centerEl = document.getElementById('center');
@@ -10,7 +11,6 @@ let finishedimg = [];
 let nameArray = [];
 let votesArray = [];
 let viewsArray = [];
-
 function img(name){
   this.name = name.split('.')[0];
   this.jpg = `img/${name}`;
@@ -47,7 +47,6 @@ function randomjpg(){
   rightEl.setAttribute('src', finishedimg[Rimg].jpg);
   finishedimg[Rimg].views++;
   temRimg = Rimg;
-  console.log(`${temLimg},${temCimg},${temRimg}`);
 }
 randomjpg();
 leftEl.addEventListener('click', clicking);
@@ -69,7 +68,6 @@ function clicking(event){
     button();
     attempts++;
   }
-  console.log(attempts);
   leftEl.addEventListener('click', clicking);
   centerEl.addEventListener('click', clicking);
   rightEl.addEventListener('click', clicking);
@@ -82,7 +80,7 @@ function button(){
   buttEl.appendChild(buttonEl);
 }
 function Results(){
-  console.log('lol');
+  storage();
   for (let i = 0; i < finishedimg.length; i++) {
     let liEl = document.createElement('li');
     resultEl.appendChild(liEl);
@@ -104,6 +102,7 @@ function chart(){
       datasets: [{
         label: 'Votes',
         data: votesArray,
+        
         backgroundColor: [
           'rgba(255, 99, 132, 0.2)'
         ],
@@ -131,7 +130,21 @@ function chart(){
       }
     }
   });
-  document.getElementById('a').style.border = "black solid";
-  document.getElementById('Results').style.borderRight = "black solid";
+  document.getElementById('a').style.border = 'black solid';
+  document.getElementById('Results').style.borderRight = 'black solid';
 }
-
+function storage(){
+  if(localStorage.getItem('finishedimg')){
+    console.log('lol');
+    let temStorage = JSON.parse(localStorage.getItem('finishedimg'));
+    for(let i = 0; i < finishedimg.length;i++){
+      finishedimg[i].views += temStorage[i].views;
+      finishedimg[i].votes += temStorage[i].votes;
+    }
+  }
+  localStorage.setItem('finishedimg',JSON.stringify(finishedimg));
+}
+function clearStorage(){
+  localStorage.clear();
+}
+clearSEl.onclick = clearStorage;
